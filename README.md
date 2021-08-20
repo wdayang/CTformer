@@ -4,8 +4,7 @@ This repository includes implementation of TED-net: Convolution-free T2T Vision 
 ![image](https://user-images.githubusercontent.com/23077770/130271382-15a2c5d7-b456-4537-95f2-f2870484fbfd.png)
 
 **Data Preparation:**
-The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
-https://www.aapm.org/GrandChallenge/LowDoseCT/
+The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https://www.aapm.org/GrandChallenge/LowDoseCT/, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
 
 **Model Training and Testing:**
 1. run python main.py to training. .
