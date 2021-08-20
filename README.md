@@ -7,5 +7,6 @@ Data preparation:
 The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
 https://www.aapm.org/GrandChallenge/LowDoseCT/
 
+Model Training and Testing:
 1. run python main.py to training. .
 2. run python main.py --mode test --test_iters [set iters] to test.
