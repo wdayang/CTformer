@@ -12,4 +12,7 @@ https://www.aapm.org/GrandChallenge/LowDoseCT/
 2. run python main.py --mode test --test_iters [set iters] to test.
 
 **Experiment Results:**
+![image](https://user-images.githubusercontent.com/23077770/130271899-1e01f3c8-a4bc-46da-a9ae-4db159905eff.png)
+
+![image](https://user-images.githubusercontent.com/23077770/130271852-dcd9703f-9734-43f0-825c-6bb964d1f133.png)
 
