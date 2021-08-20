@@ -1,8 +1,3 @@
-# Copyright (c) [2012]-[2021] Shanghai Yitu Technology Co., Ltd.
-#
-# This source code is licensed under the Clear BSD License
-# LICENSE file in the root directory of this file
-# All rights reserved.
 """
 T2T-ViT
 """
@@ -19,31 +14,6 @@ from token_transformer import Token_transformer    ## currently did not use this
 from token_performer import Token_performer
 from T2T_transformer_block import Block, get_sinusoid_encoding
 
-# =============================================================================
-# def _cfg(url='', **kwargs):
-#     return {
-#         'url': url,
-#         'num_classes': 1000, 'input_size': (3, 224, 224), 'pool_size': None,
-#         'crop_pct': .9, 'interpolation': 'bicubic',
-#         'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225),
-#         'classifier': 'head',
-#         **kwargs
-#     }
-# 
-# default_cfgs = {
-#     'T2t_vit_7': _cfg(),
-#     'T2t_vit_10': _cfg(),
-#     'T2t_vit_12': _cfg(),
-#     'T2t_vit_14': _cfg(),
-#     'T2t_vit_19': _cfg(),
-#     'T2t_vit_24': _cfg(),
-#     'T2t_vit_t_14': _cfg(),
-#     'T2t_vit_t_19': _cfg(),
-#     'T2t_vit_t_24': _cfg(),
-#     'T2t_vit_14_resnext': _cfg(),
-#     'T2t_vit_14_wide': _cfg(),
-# }
-# =============================================================================
 
 class MultiHeadDense(nn.Module):
     def __init__(self, in_ch, out_ch):
@@ -242,58 +212,6 @@ class T2T_ViT(nn.Module):
         self.num_classes = num_classes
         self.head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
 
-# =============================================================================
-#     def forward_features(self, x):
-#         B = x.shape[0]
-#         x = self.tokens_to_token(x)
-#         res_0 = x
-# 
-# # =============================================================================
-# #         cls_tokens = self.cls_token.expand(B, -1, -1)   ## no need for classification token
-# #         x = torch.cat((cls_tokens, x), dim=1)
-# # =============================================================================
-#         x = x + self.pos_embed
-#         x = self.pos_drop(x)
-#         
-#         i = 0
-#         for blk in self.blocks:
-#             i += 1
-#             x = blk(x)
-#             
-#             if i == 1:
-#                 res_1 = x
-#             elif i == 2:
-#                 res_2 = x
-#             elif i == 3:
-#                 res_3 = x
-#             elif i == 4:
-#                 res_4 = x
-#             elif i == 5:
-#                 res_5 = x
-#                 
-# # =============================================================================
-# #             elif i == 6:
-# #                 x = x + res_2
-# # =============================================================================
-# # =============================================================================
-# # # =============================================================================
-# # #             elif i == 8:
-# # #                 x = x + res_4
-# # # =============================================================================
-# #             elif i == 9:
-# #                 x = x + res_3
-# # # =============================================================================
-# # #             elif i == 10:
-# # #                 x = x + res_2
-# # # =============================================================================
-# #             elif i == 11:
-# #                 x = x + res_1
-# # =============================================================================
-# 
-#         x = self.norm(x) #+ res_0   ## do not use 0,2,4
-#         return x#,res0,res2
-# =============================================================================
-
     def forward(self, x):
         res1 = x
         #x = self.forward_features(x)
@@ -302,10 +220,6 @@ class T2T_ViT(nn.Module):
         x, res_11, res_22 = self.tokens_to_token(x)
         res_0 = x
 
-# =============================================================================
-#         cls_tokens = self.cls_token.expand(B, -1, -1)   ## no need for classification token
-#         x = torch.cat((cls_tokens, x), dim=1)
-# =============================================================================
         x = x + self.pos_embed
         x = self.pos_drop(x)
         
@@ -324,25 +238,7 @@ class T2T_ViT(nn.Module):
                 res_4 = x
             elif i == 5:
                 res_5 = x
-                
-# =============================================================================
-#             elif i == 6:
-#                 x = x + res_2
-# =============================================================================
-# =============================================================================
-# # =============================================================================
-# #             elif i == 8:
-# #                 x = x + res_4
-# # =============================================================================
-#             elif i == 9:
-#                 x = x + res_3
-# # =============================================================================
-# #             elif i == 10:
-# #                 x = x + res_2
-# # =============================================================================
-#             elif i == 11:
-#                 x = x + res_1
-# =============================================================================
+             
 
         x = self.norm(x) #+ res_0   ## do not use 0,2,4
         #return x#,res0,res2
@@ -351,128 +247,3 @@ class T2T_ViT(nn.Module):
         #print(out.shape)
         return out
 
-# =============================================================================
-# @register_model
-# def T2t_vit_7(pretrained=False, **kwargs): # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 256 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=256, depth=7, num_heads=4, mlp_ratio=2., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_7']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_10(pretrained=False, **kwargs): # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 256 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=256, depth=10, num_heads=4, mlp_ratio=2., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_10']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_12(pretrained=False, **kwargs): # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 256 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=256, depth=12, num_heads=4, mlp_ratio=2., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_12']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# 
-# @register_model
-# def T2t_vit_14(pretrained=False, **kwargs):  # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 384 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=384, depth=14, num_heads=6, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_14']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_19(pretrained=False, **kwargs): # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 448 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=448, depth=19, num_heads=7, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_19']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_24(pretrained=False, **kwargs): # adopt performer for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 512 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=512, depth=24, num_heads=8, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_24']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_t_14(pretrained=False, **kwargs):  # adopt transformers for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 384 ** -0.5)
-#     model = T2T_ViT(tokens_type='transformer', embed_dim=384, depth=14, num_heads=6, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_t_14']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_t_19(pretrained=False, **kwargs):  # adopt transformers for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 448 ** -0.5)
-#     model = T2T_ViT(tokens_type='transformer', embed_dim=448, depth=19, num_heads=7, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_t_19']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_t_24(pretrained=False, **kwargs):  # adopt transformers for tokens to token
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 512 ** -0.5)
-#     model = T2T_ViT(tokens_type='transformer', embed_dim=512, depth=24, num_heads=8, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_t_24']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# # rexnext and wide structure
-# @register_model
-# def T2t_vit_14_resnext(pretrained=False, **kwargs):
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 384 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=384, depth=14, num_heads=32, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_14_resnext']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# @register_model
-# def T2t_vit_14_wide(pretrained=False, **kwargs):
-#     if pretrained:
-#         kwargs.setdefault('qk_scale', 512 ** -0.5)
-#     model = T2T_ViT(tokens_type='performer', embed_dim=768, depth=4, num_heads=12, mlp_ratio=3., **kwargs)
-#     model.default_cfg = default_cfgs['T2t_vit_14_wide']
-#     if pretrained:
-#         load_pretrained(
-#             model, num_classes=model.num_classes, in_chans=kwargs.get('in_chans', 3))
-#     return model
-# 
-# =============================================================================
