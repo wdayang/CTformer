@@ -1,7 +1,8 @@
 # TED-net
 This repository includes implementation of TED-net: Convolution-free T2T Vision Transformer-based Encoder-decoder Dilation network for Low-dose CT Denoising in https://arxiv.org/abs/2106.04650. This respository is originated from https://github.com/SSinyu/RED-CNN and https://github.com/yitu-opensource/T2T-ViT.
 
-![image](https://user-images.githubusercontent.com/23077770/130271382-15a2c5d7-b456-4537-95f2-f2870484fbfd.png)
+#![image](https://user-images.githubusercontent.com/23077770/130271382-15a2c5d7-b456-4537-95f2-f2870484fbfd.png)
+<img src="https://user-images.githubusercontent.com/23077770/130271382-15a2c5d7-b456-4537-95f2-f2870484fbfd.png" width="48">
 
 **Data Preparation:**
 The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https://www.aapm.org/GrandChallenge/LowDoseCT/, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
