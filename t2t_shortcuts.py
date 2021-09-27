@@ -161,7 +161,7 @@ class Token_back_Image(nn.Module):
 
         return x
 
-class T2T_ViT(nn.Module):
+class TED_Net(nn.Module):
     def __init__(self, img_size=512, tokens_type='convolution', in_chans=1, num_classes=1000, embed_dim=768, depth=12,  ## transformer depth 12
                  num_heads=12, kernel=32, stride=32, mlp_ratio=4., qkv_bias=False, qk_scale=None, drop_rate=0.1, attn_drop_rate=0.1,
                  drop_path_rate=0.1, norm_layer=nn.LayerNorm, token_dim=1024):
@@ -215,10 +215,7 @@ class T2T_ViT(nn.Module):
     def forward(self, x):
         res1 = x
         #x = self.forward_features(x)
-        
-        B = x.shape[0]
         x, res_11, res_22 = self.tokens_to_token(x)
-        res_0 = x
 
         x = x + self.pos_embed
         x = self.pos_drop(x)
@@ -227,18 +224,6 @@ class T2T_ViT(nn.Module):
         for blk in self.blocks:
             i += 1
             x = blk(x)
-            
-            if i == 1:
-                res_1 = x
-            elif i == 2:
-                res_2 = x
-            elif i == 3:
-                res_3 = x
-            elif i == 4:
-                res_4 = x
-            elif i == 5:
-                res_5 = x
-             
 
         x = self.norm(x) #+ res_0   ## do not use 0,2,4
         #return x#,res0,res2

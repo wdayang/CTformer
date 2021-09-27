@@ -13,7 +13,7 @@ import torch.optim as optim
 from prep import printProgressBar
 #from networks import RED_CNN
 #from t2t_vit_v2 import T2T_ViT
-from t2t_shortcuts import T2T_ViT
+from t2t_shortcuts import TED_Net
 #from t2t_vit_full_token_1depth_1024_dilation_shift_noshort import T2T_ViT
 #from t2t_ablation_nodilation import T2T_ViT
 
@@ -78,23 +78,20 @@ class Solver(object):
 
         self.patch_size = args.patch_size
 
-        #self.REDCNN = RED_CNN()
-        #self.REDCNN = T2T_ViT(tokens_type='convolution', embed_dim=768, depth=20, num_heads=12, mlp_ratio=2.).to(self.device)
-        self.REDCNN = T2T_ViT(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
-        #self.REDCNN = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
+        self.TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             print('Use {} GPUs'.format(torch.cuda.device_count()))
-            self.REDCNN = nn.DataParallel(self.REDCNN)   ## data parallel  ,device_ids=[2,3]
-        self.REDCNN.to(self.device)
+            self.TEDNet = nn.DataParallel(self.TEDNet)   ## data parallel  ,device_ids=[2,3]
+        self.TEDNet.to(self.device)
 
         self.lr = args.lr
         self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.REDCNN.parameters(), self.lr)
+        self.optimizer = optim.Adam(self.TEDNet.parameters(), self.lr)
 
 
     def save_model(self, iter_):
         f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
-        torch.save(self.REDCNN.state_dict(), f)
+        torch.save(self.TEDNet.state_dict(), f)
 
 
     def load_model(self, iter_):
@@ -105,10 +102,10 @@ class Solver(object):
 #             for k, v in torch.load(f):
 #                 n = k[7:]
 #                 state_d[n] = v
-#             self.REDCNN.load_state_dict(state_d)
+#             self.TEDNet.load_state_dict(state_d)
 #         else:
 # =============================================================================
-        self.REDCNN.load_state_dict(torch.load(f))
+        self.TEDNet.load_state_dict(torch.load(f))
 
 
     def lr_decay(self):
@@ -149,18 +146,18 @@ class Solver(object):
 
 
     def train(self):
-        NumOfParam = count_parameters(self.REDCNN)
+        NumOfParam = count_parameters(self.TEDNet)
         print('trainable parameter:', NumOfParam)
         
 # =============================================================================
 #         inputx = torch.randn(1, 1, 64, 64).float().to(self.device)
-#         macs, params = profile(self.REDCNN, inputs=(inputx,))
+#         macs, params = profile(self.TEDNet, inputs=(inputx,))
 #         macs, params = clever_format([macs, params], "%.3f")
 #         print("MACs:", macs)
 #         print("params:", params)
 # =============================================================================
 # =============================================================================
-#         macs, params = get_model_complexity_info(self.REDCNN, (1, 64, 64), as_strings=True,
+#         macs, params = get_model_complexity_info(self.TEDNet, (1, 64, 64), as_strings=True,
 #                                            print_per_layer_stat=True, verbose=True)
 #         print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
 #         print('{:<30}  {:<8}'.format('Number of parameters: ', params))
@@ -171,7 +168,7 @@ class Solver(object):
         start_time = time.time()
         loss_all = []
         for epoch in range(1, self.num_epochs):
-            self.REDCNN.train(True)
+            self.TEDNet.train(True)
 
             for iter_, (x, y) in enumerate(self.data_loader):
                 total_iters += 1
@@ -184,10 +181,10 @@ class Solver(object):
                     x = x.view(-1, 1, self.patch_size, self.patch_size)  ## similar to reshape
                     y = y.view(-1, 1, self.patch_size, self.patch_size)
 
-                pred = self.REDCNN(x)
+                pred = self.TEDNet(x)
                 #print(pred.shape)
                 loss = self.criterion(pred, y)*100 + 1e-4  ## to prevent 0
-                self.REDCNN.zero_grad()
+                self.TEDNet.zero_grad()
                 self.optimizer.zero_grad()
 
                 loss.backward()
@@ -219,16 +216,13 @@ class Solver(object):
         plt.savefig('save/loss.png')
 
     def test(self):
-        del self.REDCNN
-        # load
-        #self.REDCNN = RED_CNN().to(self.device)
-        #self.REDCNN = T2T_ViT(tokens_type='convolution', embed_dim=768, depth=20, num_heads=12, mlp_ratio=2.)
-        self.REDCNN = T2T_ViT(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
-        #self.REDCNN = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
+        del self.TEDNet
+        self.TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
+        #self.TEDNet = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             #print('Use {} GPUs'.format(torch.cuda.device_count()))
-            self.REDCNN = nn.DataParallel(self.REDCNN)   ## data parallel
-        self.REDCNN.to(self.device)
+            self.TEDNet = nn.DataParallel(self.TEDNet)   ## data parallel
+        self.TEDNet.to(self.device)
         self.load_model(self.test_iters)
 
         # compute PSNR, SSIM, RMSE
@@ -240,40 +234,17 @@ class Solver(object):
                 shape_ = x.shape[-1]
                 x = x.unsqueeze(0).float().to(self.device)
                 y = y.unsqueeze(0).float().to(self.device)
-
-                #y = x-y#pred = self.REDCNN(x)
-# =============================================================================
-#                 arrs = split_arr(x, 64)  ## split   for image patch test
-#                 arrs_pred = torch.zeros(arrs.shape)
-#                 for i in range(4):   ## split into 8 parts to ease the cuda memory
-#                     temp_arr = arrs[i*64:(i+1)*64].to(self.device)
-#                     pred_tmp = self.REDCNN(temp_arr)
-#                     arrs_pred[i*64:(i+1)*64] = pred_tmp
-#                 #pred = self.REDCNN(arrs)
-#                 pred = agg_arr(arrs_pred, 512)
-# =============================================================================
-                #pred = self.REDCNN(x)
-# =============================================================================
-#                 arrs = split_arr(x, 64).to(self.device)  ## split   for image patch test
-#                 arrs_pred = torch.zeros(arrs.shape).to(self.device)
-#                 for i in range(4):   ## split into 4 parts to ease the cuda memory   ## for operation would not work, cannot save figure
-#                     temp_arr = arrs[i*64:(i+1)*64].to(self.device)
-#                     pred_tmp = self.REDCNN(temp_arr)
-#                     arrs_pred[i*64:(i+1)*64] = pred_tmp
-#                 #pred = self.REDCNN(arrs)
-#                 pred = agg_arr(arrs_pred, 512)
-# =============================================================================
                 
                 arrs = split_arr(x, 64).to(self.device)  ## split to image patches for test into 4 patches
-                arrs[0:64] = self.REDCNN(arrs[0:64])
-                arrs[64:2*64] = self.REDCNN(arrs[64:2*64])
-                arrs[2*64:3*64] = self.REDCNN(arrs[2*64:3*64])
-                arrs[3*64:4*64] = self.REDCNN(arrs[3*64:4*64])
+                arrs[0:64] = self.TEDNet(arrs[0:64])
+                arrs[64:2*64] = self.TEDNet(arrs[64:2*64])
+                arrs[2*64:3*64] = self.TEDNet(arrs[2*64:3*64])
+                arrs[3*64:4*64] = self.TEDNet(arrs[3*64:4*64])
                 pred = agg_arr(arrs, 512).to(self.device)
                 
 # =============================================================================
 #                 arrs = split_arr(x, 64).to(self.device)  ## split
-#                 pred = self.REDCNN(arrs)
+#                 pred = self.TEDNet(arrs)
 #                 pred = agg_arr(pred, 512)
 # =============================================================================
 
