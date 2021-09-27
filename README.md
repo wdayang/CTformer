@@ -10,6 +10,15 @@ The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https:/
 1. run python T2T_main.py to train. 
 2. run python T2T_main.py --mode test --test_iters [set iters] to test.
 
+**Simple Demo**
+from t2t_shortcuts import TED_Net
+import torch
+
+x = torch.randn(1,1,64,64)
+TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
+y = TEDNet(x)
+print(y.shape)
+
 **Experiment Results:**
 
 <img src="https://user-images.githubusercontent.com/23077770/130271899-1e01f3c8-a4bc-46da-a9ae-4db159905eff.png" width="600">
