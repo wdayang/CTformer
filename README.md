@@ -6,11 +6,14 @@ This repository includes implementation of TED-net: Convolution-free T2T Vision 
 **Data Preparation:**
 The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https://www.aapm.org/GrandChallenge/LowDoseCT/, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
 
+The path of .npy files for training and testing is T2T_main.py --save_path ['../aapm_all_npy_3mm/']
+
 **Model Training and Testing:**
 1. run python T2T_main.py to train. 
 2. run python T2T_main.py --mode test --test_iters [set iters] to test.
 
 **Simple Demo**
+```
 from t2t_shortcuts import TED_Net
 import torch
 
@@ -18,6 +21,7 @@ x = torch.randn(1,1,64,64)
 TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
 y = TEDNet(x)
 print(y.shape)
+```
 
 **Experiment Results:**
 
