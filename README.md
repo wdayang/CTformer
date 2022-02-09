@@ -1,4 +1,6 @@
 # CTformer
+[![Try In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1bfNNZigUvlgIJ2QnD70kgLmcz1CZcInc?usp=sharing)
+
 This repository includes implementation of TED-Net: Convolution-free T2T Vision Transformer-based Encoder-decoder Dilation network for Low-dose CT Denoising in https://arxiv.org/abs/2106.04650. This respository is originated from https://github.com/SSinyu/RED-CNN and https://github.com/yitu-opensource/T2T-ViT.
 
 <p align="center">
