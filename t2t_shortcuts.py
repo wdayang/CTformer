@@ -44,7 +44,7 @@ class T2T_module(nn.Module):
             self.project = nn.Linear(token_dim * 3 * 3, embed_dim)
 
         elif tokens_type == 'performer':
-            print('adopt performer encoder for tokens-to-token')
+            #print('adopt performer encoder for tokens-to-token')
             self.soft_split0 = nn.Unfold(kernel_size=(7, 7), stride=(2, 2))
             self.soft_split1 = nn.Unfold(kernel_size=(3, 3), stride=(1, 1),dilation=(2,2))
             self.soft_split2 = nn.Unfold(kernel_size=(3, 3), stride=(1, 1))
@@ -121,7 +121,7 @@ class Token_back_Image(nn.Module):
             self.project = nn.Linear(token_dim * 3 * 3, embed_dim)
 
         elif tokens_type == 'performer':
-            print('adopt performer encoder for tokens-to-token')
+            #print('adopt performer encoder for tokens-to-token')
             self.soft_split0 = nn.Fold((64,64),kernel_size=(7, 7), stride=(2, 2))
             self.soft_split1 = nn.Fold((29,29),kernel_size=(3, 3), stride=(1, 1),dilation=(2,2))
             self.soft_split2 = nn.Fold((25,25),kernel_size=(3, 3), stride=(1, 1))
