@@ -14,7 +14,7 @@ This repository includes implementation of TED-Net: Convolution-free T2T Vision 
 **Data Preparation:**
 The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https://www.aapm.org/GrandChallenge/LowDoseCT/, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
 
-The path of .npy files for training and testing is T2T_main.py --save_path ['../aapm_all_npy_3mm/']
+The path of .npy files for training and testing can set in 'main.py --save_path ['../aapm_all_npy_3mm/']'
 
 **Model Training and Testing:**
 ```
