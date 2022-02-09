@@ -17,9 +17,10 @@ The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https:/
 The path of .npy files for training and testing is T2T_main.py --save_path ['../aapm_all_npy_3mm/']
 
 **Model Training and Testing:**
-1. >> python main.py  ## train CTformer. 
-2. >> python main.py --mode test --test_iters [set iters]  ## run test on the test data.
-
+```
+>> python main.py  ## train CTformer. 
+>> python main.py --mode test --test_iters [set iters]  ## run test.
+```
 **Simple Demo**
 ```
 from CTformer import CTformer
