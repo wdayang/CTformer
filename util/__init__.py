@@ -1,1 +1,1 @@
-from .t2t_shortcuts import *
+from t2t_shortcuts import *
