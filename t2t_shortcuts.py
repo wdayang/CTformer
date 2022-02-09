@@ -144,7 +144,7 @@ class Token_back_Image(nn.Module):
 
         return x
 
-class TED_Net(nn.Module):
+class CTformer(nn.Module):
     def __init__(self, img_size=512, tokens_type='convolution', in_chans=1, num_classes=1000, embed_dim=768, depth=12,  ## transformer depth 12
                  num_heads=12, kernel=32, stride=32, mlp_ratio=4., qkv_bias=False, qk_scale=None, drop_rate=0.1, attn_drop_rate=0.1,
                  drop_path_rate=0.1, norm_layer=nn.LayerNorm, token_dim=1024):
