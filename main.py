@@ -2,7 +2,7 @@ import os
 import argparse
 from torch.backends import cudnn
 from loader import get_loader
-from T2T_solver import Solver
+from solver import Solver
 # import T2T_vit_model
 
 import os
