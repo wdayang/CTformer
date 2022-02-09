@@ -148,12 +148,12 @@ class Token_back_Image(nn.Module):
         x = self.project(x).transpose(1, 2) #+ res2
         x = x + res_22
         x = self.soft_split2(x)
-        x = torch.roll(x, shifts=(-2, -2), dims=(-1, -2))
+        x = torch.roll(x, shifts=(2, 2), dims=(-1, -2))
         x = rearrange(x,'b c h w -> b c (h w)').transpose(1,2)
         x = self.attention2(x).transpose(1, 2)
         x = x + res_11
         x = self.soft_split1(x)
-        x = torch.roll(x, shifts=(2, 2), dims=(-1, -2))
+        x = torch.roll(x, shifts=(-2, -2), dims=(-1, -2))
         
         x = rearrange(x,'b c h w -> b c (h w)').transpose(1,2)
         x = self.attention1(x).transpose(1, 2) #+ res0
