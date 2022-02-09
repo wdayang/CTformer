@@ -13,7 +13,7 @@ import torch.optim as optim
 from prep import printProgressBar
 #from networks import RED_CNN
 #from t2t_vit_v2 import T2T_ViT
-from t2t_shortcuts import TED_Net
+from CTformer import CTformer
 #from t2t_vit_full_token_1depth_1024_dilation_shift_noshort import T2T_ViT
 #from t2t_ablation_nodilation import T2T_ViT
 
