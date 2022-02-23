@@ -49,8 +49,6 @@ class T2T_module(nn.Module):
             self.soft_split1 = nn.Unfold(kernel_size=(3, 3), stride=(1, 1),dilation=(2,2))
             self.soft_split2 = nn.Unfold(kernel_size=(3, 3), stride=(1, 1))
 
-            #self.attention1 = Token_performer(dim=token_dim, in_dim=in_chans*7*7, kernel_ratio=0.5)
-            #self.attention2 = Token_performer(dim=token_dim, in_dim=token_dim*3*3, kernel_ratio=0.5)
             self.attention1 = Token_performer(dim=in_chans*7*7, in_dim=token_dim, kernel_ratio=0.5)
             self.attention2 = Token_performer(dim=token_dim*3*3, in_dim=token_dim, kernel_ratio=0.5)
             self.project = nn.Linear(token_dim * 3 * 3, embed_dim)
@@ -66,8 +64,7 @@ class T2T_module(nn.Module):
         x = self.attention1(x.transpose(1, 2))
         B, new_HW, C = x.shape
         x = x.transpose(1,2).reshape(B, C, int(np.sqrt(new_HW)), int(np.sqrt(new_HW)))
-        # iteration1: soft split
-        x = torch.roll(x, shifts=(-2, -2), dims=(2, 3))  ##  shift some position
+        x = torch.roll(x, shifts=(2, 2), dims=(2, 3))  ##  shift some position
         x = self.soft_split1(x)
         res_11 = x
 
@@ -76,7 +73,6 @@ class T2T_module(nn.Module):
         B, new_HW, C = x.shape
         x = x.transpose(1, 2).reshape(B, C, int(np.sqrt(new_HW)), int(np.sqrt(new_HW)))
         x = torch.roll(x, shifts=(2, 2), dims=(2, 3))  ## shift back position
-        # iteration2: soft split
         x = self.soft_split2(x)
         res_22 = x
         
@@ -105,8 +101,6 @@ class Token_back_Image(nn.Module):
             self.soft_split1 = nn.Fold((29,29),kernel_size=(3, 3), stride=(1, 1),dilation=(2,2))
             self.soft_split2 = nn.Fold((25,25),kernel_size=(3, 3), stride=(1, 1))
 
-            #self.attention1 = Token_performer(dim=token_dim, in_dim=in_chans*7*7, kernel_ratio=0.5)
-            #self.attention2 = Token_performer(dim=token_dim, in_dim=token_dim*3*3, kernel_ratio=0.5)
             self.attention1 = Token_performer(dim=token_dim, in_dim=in_chans*7*7, kernel_ratio=0.5)
             self.attention2 = Token_performer(dim=token_dim, in_dim=token_dim*3*3, kernel_ratio=0.5)
             self.project = nn.Linear(embed_dim,token_dim * 3 * 3)
@@ -114,12 +108,12 @@ class Token_back_Image(nn.Module):
         self.num_patches = (img_size // (1 * 2 * 2)) * (img_size // (1 * 2 * 2))  # there are 3 sfot split, stride are 4,2,2 seperately
 
     def forward(self, x, res_11,res_22):    
-        x = self.project(x).transpose(1, 2) #+ res2
+        x = self.project(x).transpose(1, 2) 
 
         # CTformer module C
         x = x + res_22
         x = self.soft_split2(x)
-        x = torch.roll(x, shifts=(2, 2), dims=(-1, -2))
+        x = torch.roll(x, shifts=(-2, -2), dims=(-1, -2))
         x = rearrange(x,'b c h w -> b c (h w)').transpose(1,2)
         x = self.attention2(x).transpose(1, 2)
         
