@@ -72,7 +72,7 @@ class Solver(object):
 
         self.patch_size = args.patch_size
 
-        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
+        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=64, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             print('Use {} GPUs'.format(torch.cuda.device_count()))
             self.CTFormer = nn.DataParallel(self.CTFormer)   ## data parallel  ,device_ids=[2,3]
@@ -190,7 +190,7 @@ class Solver(object):
 
     def test(self):
         del self.CTFormer
-        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
+        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=64, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
         #self.CTFormer = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             #print('Use {} GPUs'.format(torch.cuda.device_count()))
