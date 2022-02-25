@@ -19,12 +19,6 @@ from CTformer import CTformer
 
 from measure import compute_measure
 
-# =============================================================================
-# from thop import profile ## params and MACs
-# from thop import clever_format
-# from ptflops import get_model_complexity_info
-# =============================================================================
-
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
@@ -95,17 +89,9 @@ class Solver(object):
 
 
     def load_model(self, iter_):
+        device = torch.device('cpu')
         f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
-# =============================================================================
-#         if self.multi_gpu:    ## has problem use multiple GPU testing
-#             state_d = OrderedDict()
-#             for k, v in torch.load(f):
-#                 n = k[7:]
-#                 state_d[n] = v
-#             self.TEDNet.load_state_dict(state_d)
-#         else:
-# =============================================================================
-        self.TEDNet.load_state_dict(torch.load(f))
+        self.TEDNet.load_state_dict(torch.load(f, map_location=device))
 
 
     def lr_decay(self):
@@ -148,20 +134,6 @@ class Solver(object):
     def train(self):
         NumOfParam = count_parameters(self.TEDNet)
         print('trainable parameter:', NumOfParam)
-        
-# =============================================================================
-#         inputx = torch.randn(1, 1, 64, 64).float().to(self.device)
-#         macs, params = profile(self.TEDNet, inputs=(inputx,))
-#         macs, params = clever_format([macs, params], "%.3f")
-#         print("MACs:", macs)
-#         print("params:", params)
-# =============================================================================
-# =============================================================================
-#         macs, params = get_model_complexity_info(self.TEDNet, (1, 64, 64), as_strings=True,
-#                                            print_per_layer_stat=True, verbose=True)
-#         print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
-#         print('{:<30}  {:<8}'.format('Number of parameters: ', params))
-# =============================================================================
 
         train_losses = []
         total_iters = 0
@@ -242,11 +214,6 @@ class Solver(object):
                 arrs[3*64:4*64] = self.TEDNet(arrs[3*64:4*64])
                 pred = agg_arr(arrs, 512).to(self.device)
                 
-# =============================================================================
-#                 arrs = split_arr(x, 64).to(self.device)  ## split
-#                 pred = self.TEDNet(arrs)
-#                 pred = agg_arr(pred, 512)
-# =============================================================================
 
                 #pred = x - pred# denormalize, truncate
                 x = self.trunc(self.denormalize_(x.view(shape_, shape_).cpu().detach()))
