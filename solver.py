@@ -72,27 +72,27 @@ class Solver(object):
 
         self.patch_size = args.patch_size
 
-        self.TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
+        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=4, stride=4, mlp_ratio=2., token_dim=64)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             print('Use {} GPUs'.format(torch.cuda.device_count()))
-            self.TEDNet = nn.DataParallel(self.TEDNet)   ## data parallel  ,device_ids=[2,3]
-        self.TEDNet.to(self.device)
+            self.CTFormer = nn.DataParallel(self.CTFormer)   ## data parallel  ,device_ids=[2,3]
+        self.CTFormer.to(self.device)
 
         self.lr = args.lr
         self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.TEDNet.parameters(), self.lr)
+        self.optimizer = optim.Adam(self.CTFormer.parameters(), self.lr)
 
 
     def save_model(self, iter_):
         f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
-        torch.save(self.TEDNet.state_dict(), f)
+        torch.save(self.CTFormer.state_dict(), f)
 
 
     def load_model(self, iter_):
         device = torch.device('cpu')
         #f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
         f = os.path.join('model_pretrained', 'T2T_vit_{}iter.ckpt'.format(iter_))
-        self.TEDNet.load_state_dict(torch.load(f, map_location=device))
+        self.CTFormer.load_state_dict(torch.load(f, map_location=device))
 
 
     def lr_decay(self):
@@ -133,7 +133,7 @@ class Solver(object):
 
 
     def train(self):
-        NumOfParam = count_parameters(self.TEDNet)
+        NumOfParam = count_parameters(self.CTFormer)
         print('trainable parameter:', NumOfParam)
 
         train_losses = []
@@ -141,7 +141,7 @@ class Solver(object):
         start_time = time.time()
         loss_all = []
         for epoch in range(1, self.num_epochs):
-            self.TEDNet.train(True)
+            self.CTFormer.train(True)
 
             for iter_, (x, y) in enumerate(self.data_loader):
                 total_iters += 1
@@ -154,10 +154,10 @@ class Solver(object):
                     x = x.view(-1, 1, self.patch_size, self.patch_size)  ## similar to reshape
                     y = y.view(-1, 1, self.patch_size, self.patch_size)
 
-                pred = self.TEDNet(x)
+                pred = self.CTFormer(x)
                 #print(pred.shape)
                 loss = self.criterion(pred, y)*100 + 1e-4  ## to prevent 0
-                self.TEDNet.zero_grad()
+                self.CTFormer.zero_grad()
                 self.optimizer.zero_grad()
 
                 loss.backward()
@@ -189,13 +189,13 @@ class Solver(object):
         plt.savefig('save/loss.png')
 
     def test(self):
-        del self.TEDNet
-        self.TEDNet = TED_Net(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
-        #self.TEDNet = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
+        del self.CTFormer
+        self.CTFormer = CTformer(img_size=64,tokens_type='performer', embed_dim=512, depth=1, num_heads=8, kernel=8, stride=4, mlp_ratio=2., token_dim=64)
+        #self.CTFormer = T2T_ViT(img_size=128,tokens_type='convolution', in_chans=8,embed_dim=768, depth=6, num_heads=12, kernel=16, stride=8, mlp_ratio=2.)
         if (self.multi_gpu) and (torch.cuda.device_count() > 1):
             #print('Use {} GPUs'.format(torch.cuda.device_count()))
-            self.TEDNet = nn.DataParallel(self.TEDNet)   ## data parallel
-        self.TEDNet.to(self.device)
+            self.CTFormer = nn.DataParallel(self.CTFormer)   ## data parallel
+        self.CTFormer.to(self.device)
         self.load_model(self.test_iters)
 
         # compute PSNR, SSIM, RMSE
@@ -209,10 +209,10 @@ class Solver(object):
                 y = y.unsqueeze(0).float().to(self.device)
                 
                 arrs = split_arr(x, 64).to(self.device)  ## split to image patches for test into 4 patches
-                arrs[0:64] = self.TEDNet(arrs[0:64])
-                arrs[64:2*64] = self.TEDNet(arrs[64:2*64])
-                arrs[2*64:3*64] = self.TEDNet(arrs[2*64:3*64])
-                arrs[3*64:4*64] = self.TEDNet(arrs[3*64:4*64])
+                arrs[0:64] = self.CTFormer(arrs[0:64])
+                arrs[64:2*64] = self.CTFormer(arrs[64:2*64])
+                arrs[2*64:3*64] = self.CTFormer(arrs[2*64:3*64])
+                arrs[3*64:4*64] = self.CTFormer(arrs[3*64:4*64])
                 pred = agg_arr(arrs, 512).to(self.device)
                 
 
