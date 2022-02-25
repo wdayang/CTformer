@@ -62,19 +62,20 @@ class T2T_module(nn.Module):
         
         # CTformer module A
         x = self.attention1(x.transpose(1, 2))
+        res_11 = x
         B, new_HW, C = x.shape
         x = x.transpose(1,2).reshape(B, C, int(np.sqrt(new_HW)), int(np.sqrt(new_HW)))
         x = torch.roll(x, shifts=(2, 2), dims=(2, 3))  ##  shift some position
         x = self.soft_split1(x)
-        res_11 = x
-
+        
         # CTformer module B
         x = self.attention2(x.transpose(1, 2))
+        res_22 = x
         B, new_HW, C = x.shape
         x = x.transpose(1, 2).reshape(B, C, int(np.sqrt(new_HW)), int(np.sqrt(new_HW)))
         x = torch.roll(x, shifts=(2, 2), dims=(2, 3))  ## shift back position
         x = self.soft_split2(x)
-        res_22 = x
+        
         
         x = self.project(x.transpose(1, 2))  ## no projection
         return x,res_11,res_22 #,res0,res2
@@ -111,18 +112,17 @@ class Token_back_Image(nn.Module):
         x = self.project(x).transpose(1, 2) 
 
         # CTformer module C
-        x = x + res_22
         x = self.soft_split2(x)
         x = torch.roll(x, shifts=(-2, -2), dims=(-1, -2))
         x = rearrange(x,'b c h w -> b c (h w)').transpose(1,2)
+        x = x + res_22
         x = self.attention2(x).transpose(1, 2)
         
         # CTformer module D
-        x = x + res_11
         x = self.soft_split1(x)
         x = torch.roll(x, shifts=(-2, -2), dims=(-1, -2))
-        
         x = rearrange(x,'b c h w -> b c (h w)').transpose(1,2)
+        x = x + res_11
         x = self.attention1(x).transpose(1, 2)
         
         # Detokenization
