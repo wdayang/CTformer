@@ -90,8 +90,8 @@ class Solver(object):
 
     def load_model(self, iter_):
         device = torch.device('cpu')
-        #f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
-        f = os.path.join('model_pretrained', 'T2T_vit_{}iter.ckpt'.format(iter_))
+        f = os.path.join(self.save_path, 'T2T_vit_{}iter.ckpt'.format(iter_))
+        #f = os.path.join('model_pretrained', 'T2T_vit_{}iter.ckpt'.format(iter_))
         self.CTFormer.load_state_dict(torch.load(f, map_location=device))
 
 
