@@ -36,7 +36,7 @@ The path of .npy files for training and testing can set in 'main.py --save_path 
 >> python main.py  ## train CTformer. 
 >> python main.py --mode test --test_iters [set iters]  ## run test.
 ```
-## Simple Demo
+## Usage Demo
 ```
 from CTformer import CTformer
 import torch
