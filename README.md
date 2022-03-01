@@ -4,14 +4,14 @@
 This repository includes implementation of TED-Net: Convolution-free T2T Vision Transformer-based Encoder-decoder Dilation network for Low-dose CT Denoising in https://arxiv.org/abs/2202.13517 and https://arxiv.org/abs/2106.04650. This respository is originated from https://github.com/SSinyu/RED-CNN and https://github.com/yitu-opensource/T2T-ViT.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="500">
+  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="450">
 </p>
 <p align="center">
   <em>Fig. 1: The architecture of the CTformer.</em>
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png" width="750">
+  <img src="https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png" width="800">
 </p>
 <p align="center">
   <em>Fig. 2: The micro structures of the CTformer.</em>
@@ -24,17 +24,17 @@ This repository includes implementation of TED-Net: Convolution-free T2T Vision 
 
 
 
-**Data Preparation:**
+## Data Preparation:
 The 2016 NIH-AAPM-Mayo Clinic Low Dose CT Grand Challenge by Mayo Clinic https://www.aapm.org/GrandChallenge/LowDoseCT/, please refer to https://github.com/SSinyu/RED-CNN for more detailed data preparation. 
 
 The path of .npy files for training and testing can set in 'main.py --save_path ['../aapm_all_npy_3mm/']'
 
-**Model Training and Testing:**
+## Model Training and Testing:
 ```
 >> python main.py  ## train CTformer. 
 >> python main.py --mode test --test_iters [set iters]  ## run test.
 ```
-**Simple Demo**
+## Simple Demo
 ```
 from CTformer import CTformer
 import torch
@@ -45,7 +45,7 @@ y = CT_former(x)
 print(y.shape)
 ```
 
-**Experiment Results:**
+## Experiment Results:
 <p align="center">
 Tab. 1: Quantitative results.
 </p>
@@ -67,3 +67,12 @@ Fig. 3: The denoised results: (a) LDCT, (b) RED-CNN, (c) WGAN-VGG, (d) MAP-NN, (
 <!-- <img src="https://user-images.githubusercontent.com/23077770/130271899-1e01f3c8-a4bc-46da-a9ae-4db159905eff.png" width="600"> -->
 <!-- <img src="https://user-images.githubusercontent.com/23077770/130271852-dcd9703f-9734-43f0-825c-6bb964d1f133.png" width="600"> -->
 
+## Visual Interpretation:
+
+<!-- ![image](https://user-images.githubusercontent.com/23077770/156232817-0b28b49c-1c0f-480c-b0a5-e03988e8806d.png) -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23077770/156232817-0b28b49c-1c0f-480c-b0a5-e03988e8806d.png" width="800">
+</p>
+<p align="center">
+  <em>Fig. 4: The attention maps of the CTformer.</em>
+</p>
