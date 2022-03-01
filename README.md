@@ -4,11 +4,17 @@
 This repository includes implementation of TED-Net: Convolution-free T2T Vision Transformer-based Encoder-decoder Dilation network for Low-dose CT Denoising in https://arxiv.org/abs/2202.13517 and https://arxiv.org/abs/2106.04650. This respository is originated from https://github.com/SSinyu/RED-CNN and https://github.com/yitu-opensource/T2T-ViT.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="400">
+  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="500">
+</p>
+<p align="center">
+  <em>Fig. 1: The architecture of the CTformer.</em>
+</p>
+
+<p align="center">
   <img src="https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png" width="750">
 </p>
 <p align="center">
-  <em>Fig. 1 The macro and micro structures of the CTformer.</em>
+  <em>Fig. 2: The micro structures of the CTformer.</em>
 </p>
 
 <!-- ![image](https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png) -->
@@ -41,11 +47,23 @@ print(y.shape)
 
 **Experiment Results:**
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23077770/153113718-bac6dada-0a06-4006-8aa5-2d315f87ad0e.png" width="400">
+Tab. 1: Quantitative results.
 </p>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23077770/156231489-6a73924a-b37e-49f2-8451-570f765e7692.png" width="450">
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23077770/156231907-4f4dbcf3-1ac8-48b9-87c7-40438ef74a79.png" width="450">
+</p>
+<p align="center">
+Fig. 3: The denoised results: (a) LDCT, (b) RED-CNN, (c) WGAN-VGG, (d) MAP-NN, (e) AD-NET, (f) the proposed CTformer, and (g) NDCT.
+</p>
+<!-- ![image](https://user-images.githubusercontent.com/23077770/156231907-4f4dbcf3-1ac8-48b9-87c7-40438ef74a79.png) -->
+
+
+<!-- ![image](https://user-images.githubusercontent.com/23077770/156231489-6a73924a-b37e-49f2-8451-570f765e7692.png) -->
 <!-- ![image](https://user-images.githubusercontent.com/23077770/153113718-bac6dada-0a06-4006-8aa5-2d315f87ad0e.png) -->
-
-
-<!-- <img src="https://user-images.githubusercontent.com/23077770/130271899-1e01f3c8-a4bc-46da-a9ae-4db159905eff.png" width="600">
-<img src="https://user-images.githubusercontent.com/23077770/130271852-dcd9703f-9734-43f0-825c-6bb964d1f133.png" width="600"> -->
+<!-- <img src="https://user-images.githubusercontent.com/23077770/130271899-1e01f3c8-a4bc-46da-a9ae-4db159905eff.png" width="600"> -->
+<!-- <img src="https://user-images.githubusercontent.com/23077770/130271852-dcd9703f-9734-43f0-825c-6bb964d1f133.png" width="600"> -->
 
