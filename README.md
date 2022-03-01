@@ -7,6 +7,9 @@ This repository includes implementation of TED-Net: Convolution-free T2T Vision 
   <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="400">
   <img src="https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png" width="750">
 </p>
+<p align="center">
+  <em>Fig. 1 The macro and micro structures of the CTformer.</em>
+</p>
 
 <!-- ![image](https://user-images.githubusercontent.com/23077770/156230454-cf17ce76-9a93-4ffe-b165-c0b35705ef28.png) -->
 <!-- ![image](https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png) -->
