@@ -59,7 +59,7 @@ Tab. 1: Quantitative results.
   <img src="https://user-images.githubusercontent.com/23077770/156231907-4f4dbcf3-1ac8-48b9-87c7-40438ef74a79.png" width="450">
 </p>
 <p align="center">
-Fig. 3: The denoised results: (a) LDCT, (b) RED-CNN, (c) WGAN-VGG, (d) MAP-NN, (e) AD-NET, (f) the proposed CTformer, and (g) NDCT.
+Fig. 3: (a) LDCT, (b) RED-CNN, (c) WGAN-VGG, (d) MAP-NN, (e) AD-NET, (f) the proposed CTformer, and (g) NDCT.
 </p>
 <!-- ![image](https://user-images.githubusercontent.com/23077770/156231907-4f4dbcf3-1ac8-48b9-87c7-40438ef74a79.png) -->
 
