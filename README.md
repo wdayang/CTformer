@@ -6,7 +6,7 @@
 This repository includes implementation of CTformer: Convolution-free Token2Token Dilated Vision Transformer for Low-dose CT Denoising in https://arxiv.org/abs/2202.13517 and https://arxiv.org/abs/2106.04650. This respository is originated from https://github.com/SSinyu/RED-CNN and https://github.com/yitu-opensource/T2T-ViT.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="450">
+  <img src="https://user-images.githubusercontent.com/23077770/156230081-cf5488f3-14e9-4eae-bdb1-e00d6fce7527.png" width="420">
 </p>
 <p align="center">
   <em>Fig. 1: The architecture of the CTformer.</em>
